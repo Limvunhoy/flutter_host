@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_host/feature/view/home_page.dart';
+import 'package:app_a/main.dart' as appA;
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Future.delayed(const Duration(milliseconds: 250));
+  const channel = MethodChannel("dev.wingmoney.com/eco");
+  var result = await channel.invokeMethod("requestEntryPoint");
+  switch (result) {
+    case 'flutterHost':
+      return appA.main();
+  }
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
